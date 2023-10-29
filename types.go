@@ -1,5 +1,9 @@
 package logging
 
+import (
+	"strings"
+)
+
 // LogFail should we log or should we crash
 type LogLevel string
 
@@ -26,4 +30,31 @@ type Config struct {
 	SamplingThereafter int
 	Development        bool
 	Encoding           string
+}
+
+func (t *Config) ParseLogLevel(s string) error {
+
+	switch strings.ToLower(s) {
+
+	case string(Disabled):
+		t.LogLevel = Disabled
+
+	case string(InfoLevel):
+		t.LogLevel = InfoLevel
+
+	case string(TraceLevel):
+		t.LogLevel = TraceLevel
+
+	case string(DebugLevel):
+		t.LogLevel = DebugLevel
+
+	case string(WarnLevel):
+		t.LogLevel = WarnLevel
+
+	case string(ErrorLevel):
+		t.LogLevel = ErrorLevel
+
+	}
+
+	return nil
 }

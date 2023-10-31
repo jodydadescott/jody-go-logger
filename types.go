@@ -2,6 +2,8 @@ package logging
 
 import (
 	"strings"
+
+	"github.com/jinzhu/copier"
 )
 
 // LogFail should we log or should we crash
@@ -25,11 +27,18 @@ const (
 )
 
 type Config struct {
-	LogLevel           LogLevel
-	SamplingInitial    int
-	SamplingThereafter int
-	Development        bool
-	Encoding           string
+	LogLevel           LogLevel `json:"logLevel,omitempty" yaml:"logLevel,omitempty"`
+	SamplingInitial    int      `json:"samplingInitial,omitempty" yaml:"samplingInitial,omitempty"`
+	SamplingThereafter int      `json:"samplingThereafter,omitempty" yaml:"samplingThereafter,omitempty"`
+	Development        bool     `json:"development,omitempty" yaml:"development,omitempty"`
+	Encoding           string   `json:"encoding,omitempty" yaml:"encoding,omitempty"`
+}
+
+// Clone return copy
+func (t *Config) Clone() *Config {
+	c := &Config{}
+	copier.Copy(&c, &t)
+	return c
 }
 
 func (t *Config) ParseLogLevel(s string) error {

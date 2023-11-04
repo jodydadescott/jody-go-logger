@@ -34,7 +34,7 @@ func (t *Config) Clone() *Config {
 	return c
 }
 
-func (t *Config) ParseLogLevel(s string) {
+func (t *Config) ParseLogLevel(s string) error {
 
 	switch strings.ToLower(s) {
 
@@ -54,8 +54,9 @@ func (t *Config) ParseLogLevel(s string) {
 		t.LogLevel = ErrorLevel
 
 	default:
-		panic(fmt.Sprintf("LogLevel %s is invalid", s))
+		return fmt.Errorf("LogLevel %s is invalid", s)
 
 	}
 
+	return nil
 }

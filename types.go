@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/jinzhu/copier"
@@ -10,18 +11,10 @@ import (
 type LogLevel string
 
 const (
-	DefaultSamplingInitial    = 100
-	DefaultSamplingThereafter = 100
-	DefaultEncoding           = "console"
-	DefaultLogLevel           = InfoLevel
-)
-
-const (
 	Empty      LogLevel = ""
-	Disabled            = "disabled"
-	InfoLevel           = "info"
 	TraceLevel          = "trace"
 	DebugLevel          = "debug"
+	InfoLevel           = "info"
 	WarnLevel           = "warn"
 	ErrorLevel          = "error"
 )
@@ -41,12 +34,9 @@ func (t *Config) Clone() *Config {
 	return c
 }
 
-func (t *Config) ParseLogLevel(s string) error {
+func (t *Config) ParseLogLevel(s string) {
 
 	switch strings.ToLower(s) {
-
-	case string(Disabled):
-		t.LogLevel = Disabled
 
 	case string(InfoLevel):
 		t.LogLevel = InfoLevel
@@ -63,7 +53,9 @@ func (t *Config) ParseLogLevel(s string) error {
 	case string(ErrorLevel):
 		t.LogLevel = ErrorLevel
 
+	default:
+		panic(fmt.Sprintf("LogLevel %s is invalid", s))
+
 	}
 
-	return nil
 }

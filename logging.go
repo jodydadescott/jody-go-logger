@@ -27,13 +27,34 @@ func SetConfig(config *Config) {
 
 	zapConfig := &zap.Config{
 		Development: config.Development,
-		Level:       zap.NewAtomicLevelAt(zap.DebugLevel),
 		Sampling: &zap.SamplingConfig{
 			Initial:    config.SamplingInitial,
 			Thereafter: config.SamplingThereafter,
 		},
 		Encoding:      config.Encoding,
 		EncoderConfig: zap.NewProductionEncoderConfig(),
+	}
+
+	switch config.LogLevel {
+
+	case Empty:
+		zapConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+
+	case TraceLevel:
+		zapConfig.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+
+	case DebugLevel:
+		zapConfig.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+
+	case InfoLevel:
+		zapConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+
+	case WarnLevel:
+		zapConfig.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
+
+	case ErrorLevel:
+		zapConfig.Level = zap.NewAtomicLevelAt(zap.ErrorLevel)
+
 	}
 
 	zapConfig.OutputPaths = append(zapConfig.OutputPaths, "stderr")

@@ -1,16 +1,18 @@
 package logging
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
+
+var Wire = false
+var Trace = false
 
 // New returns logger
 func SetConfig(config *Config) {
 
 	if config == nil {
 		panic("config is nil")
-	}
-
-	if config.LogLevel == Empty {
-		config.LogLevel = DefaultLogLevel
 	}
 
 	if config.SamplingInitial <= 0 {
@@ -21,9 +23,12 @@ func SetConfig(config *Config) {
 		config.SamplingThereafter = DefaultSamplingThereafter
 	}
 
-	if config.Encoding == "" {
+	if config.Encoding == EmptyEncoding {
 		config.Encoding = DefaultEncoding
 	}
+
+	encoderConfig := zap.NewProductionEncoderConfig()
+	encoderConfig.EncodeCaller = zapcore.FullCallerEncoder
 
 	zapConfig := &zap.Config{
 		Development: config.Development,
@@ -31,29 +36,46 @@ func SetConfig(config *Config) {
 			Initial:    config.SamplingInitial,
 			Thereafter: config.SamplingThereafter,
 		},
-		Encoding:      config.Encoding,
-		EncoderConfig: zap.NewProductionEncoderConfig(),
+		Encoding:      string(config.Encoding),
+		EncoderConfig: encoderConfig,
 	}
 
 	switch config.LogLevel {
 
-	case Empty:
+	case EmptyLevel:
 		zapConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+		Wire = false
+		Trace = false
+
+	case WireLevel:
+		zapConfig.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+		Wire = true
+		Trace = true
 
 	case TraceLevel:
 		zapConfig.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+		Wire = false
+		Trace = true
 
 	case DebugLevel:
 		zapConfig.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+		Wire = false
+		Trace = false
 
 	case InfoLevel:
 		zapConfig.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+		Wire = false
+		Trace = false
 
 	case WarnLevel:
 		zapConfig.Level = zap.NewAtomicLevelAt(zap.WarnLevel)
+		Wire = false
+		Trace = false
 
 	case ErrorLevel:
 		zapConfig.Level = zap.NewAtomicLevelAt(zap.ErrorLevel)
+		Wire = false
+		Trace = false
 
 	}
 

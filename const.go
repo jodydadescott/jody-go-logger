@@ -11,18 +11,18 @@ type LogLevel string
 
 const (
 	EmptyLevel LogLevel = ""
-	WireLevel           = "wire"
-	TraceLevel          = "trace"
-	DebugLevel          = "debug"
-	InfoLevel           = "info"
-	WarnLevel           = "warn"
-	ErrorLevel          = "error"
+	WireLevel  LogLevel = "wire"
+	TraceLevel LogLevel = "trace"
+	DebugLevel LogLevel = "debug"
+	InfoLevel  LogLevel = "info"
+	WarnLevel  LogLevel = "warn"
+	ErrorLevel LogLevel = "error"
 )
 
 type Encoding string
 
 const (
 	EmptyEncoding   Encoding = ""
-	EncodingJSON             = "json"
-	EncodingConsole          = "console"
+	EncodingJSON    Encoding = "json"
+	EncodingConsole Encoding = "console"
 )
